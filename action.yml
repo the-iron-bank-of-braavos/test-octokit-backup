@@ -1,0 +1,13 @@
+name: 'Test verified commits'
+
+inputs:
+  appId:
+    default: ''
+  clientId:
+    default: ''
+  privateKey:
+    default: ''
+
+runs:
+  using: 'node12'
+  main: 'src/main.ts'
