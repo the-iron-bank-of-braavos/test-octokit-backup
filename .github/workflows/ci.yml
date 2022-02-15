@@ -1,0 +1,71 @@
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm ci
+      - run: npm run build
+      - run: npm run format
+      - run: npm run format-check
+      - run: npm run lint
+      - run: npm run test
+      - name: "Commit and push changes"
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -A
+          (git commit -m "Build index.js") || true
+          (git push) || true
+
+  test-local-dispatch:
+    name: Test local dispatch
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: git pull origin ${{ github.ref }}
+      - name: Test workflow dispatch
+        uses: ./
+        with:
+          appId: ${{ secrets.APP_ID }}
+          privateKey: ${{ secrets.APP_RSA_PRIVATE_KEY }}
+          clientId: ${{ secrets.APP_CLIENT_ID }}
+          clientSecret: ${{ secrets.APP_CLIENT_SECRET }}
+          ref: refs/heads/upload-action
+          workflow: nested-workflow.yml
+          inputs: "{\"name\":\"Santander APP Command Line User\", \"home\":\"CLI\" }"
+          
+  test-remote-dispatch:
+    name: Test remote dispatch
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: git pull origin ${{ github.ref }}
+      - name: Test remote workflow dispatch
+        uses: ./
+        with:
+          token: ${{ secrets.USER_PAT }}
+          repository: the-iron-bank-of-braavos/poc-actions
+          ref: refs/heads/feature/workflow-dispatch
+          workflow: nested-workflow.yml
+          inputs: "{\"name\":\"Santander Remote Command Line User\", \"home\":\"CLI\" }"
