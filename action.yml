@@ -1,0 +1,16 @@
+name: 'Test verified commits'
+
+inputs:
+  appId:
+    default: ''
+  clientId:
+    default: ''
+  privateKey:
+    description: 'Personal user token'
+    default: ''
+  repository:
+    default: ${{ github.repository }}
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
