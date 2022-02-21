@@ -1,0 +1,38 @@
+{
+  "name": "test-octokit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Test Octokit",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc && ncc build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com:the-iron-bank-of-braavos/test-octokit.git"
+  },
+  "keywords": [
+    "actions",
+    "workflow",
+    "dispatch"
+  ],
+  "author": "Daniel Sanchez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com:the-iron-bank-of-braavos/test-octokit/issues"
+  },
+  "homepage": "https://github.com:the-iron-bank-of-braavos/test-octokit#readme",
+  "dependencies": {
+    "@actions/core": "1.4.0",
+    "@actions/github": "5.0.0",
+    "@octokit/auth-app": "^3.6.0",
+    "@octokit/rest": "^18.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "16.4.0",
+    "@typescript-eslint/parser": "4.28.4",
+    "@vercel/ncc": "0.29.0",
+    "js-yaml": "4.1.0",
+    "typescript": "4.3.5"
+  }
+}

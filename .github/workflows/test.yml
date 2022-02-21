@@ -1,0 +1,36 @@
+name: Test workflow for example 01
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm ci
+      - run: npm run build
+
+      - name: "Commit and push changes"
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -A
+          (git commit -m "Build index.js") || true
+          (git push) || true
+
+  test:
+    name: Test Octokit
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: git pull origin ${{ github.ref }}
+      - name: Test Verified Commit
+        uses: ./
+        with:
+          token: ${{ secrets.PAT }}
